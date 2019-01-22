@@ -1,5 +1,5 @@
 
-# Comparing Machine Learning Techniques using Pipelines - Lab
+# Comparing Machine Learning Techniques Using Pipelines - Lab
 
 ## Introduction
 
