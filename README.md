@@ -575,6 +575,7 @@ Repeat the above, but now create three different pipelines:
 
 
 ```python
+# ⏰ This cell may take several minutes to run
 from sklearn import svm
 from sklearn.pipeline import Pipeline
 from sklearn.ensemble import RandomForestClassifier
@@ -632,15 +633,18 @@ for index, val in enumerate(pipelines):
 
 ## Pipeline with grid search
 
-Construct 3 pipelines with grid search
-- one for support vector machines - make sure your grid isn't too big. You'll see it takes quite a while to fit SVMs with non-linear kernel functions!
+Construct two pipelines with grid search:
 - one for random forests - try to have around 40 different models
-- one for the adaboost algorithm. 
+- one for the adaboost algorithm 
 
-### SVM pipeline with grid search
+As extra, level-up work, construct a pipeline with grid search for support vector machines. 
+* Make sure your grid isn't too big. You'll see it takes quite a while to fit SVMs with non-linear kernel functions!
+
+### Random Forest pipeline with grid search
 
 
 ```python
+# imports
 from sklearn import svm
 from sklearn.model_selection import GridSearchCV
 from sklearn.pipeline import Pipeline
@@ -648,157 +652,7 @@ from sklearn.pipeline import Pipeline
 
 
 ```python
-# Construct pipeline
-pipe_svm = Pipeline([('pca', PCA(n_components=27)),
-            ('clf', svm.SVC(random_state=123))])
-
-# Set grid search params
-param_grid_svm = [
-  {'clf__C': [0.1, 1, 10]  , 'clf__kernel': ['linear']},
-  {'clf__C': [1, 10], 'clf__gamma': [0.001, 0.01], 'clf__kernel': ['rbf']},
- ]
-
-# Construct grid search
-gs_svm = GridSearchCV(estimator=pipe_svm,
-            param_grid=param_grid_svm,
-            scoring='accuracy',
-            cv=3, verbose=2, return_train_score = True)
-
-# Fit using grid search
-gs_svm.fit(X_train, y_train)
-
-# Best accuracy
-print('Best accuracy: %.3f' % gs_svm.best_score_)
-
-# Best params
-print('\nBest params:\n', gs_svm.best_params_)
-```
-
-    Fitting 3 folds for each of 7 candidates, totalling 21 fits
-    [CV] clf__C=0.1, clf__kernel=linear ..................................
-    [CV] ................... clf__C=0.1, clf__kernel=linear, total=  21.6s
-    [CV] clf__C=0.1, clf__kernel=linear ..................................
-
-
-    [Parallel(n_jobs=1)]: Done   1 out of   1 | elapsed:   31.1s remaining:    0.0s
-
-
-    [CV] ................... clf__C=0.1, clf__kernel=linear, total=  21.4s
-    [CV] clf__C=0.1, clf__kernel=linear ..................................
-    [CV] ................... clf__C=0.1, clf__kernel=linear, total=  21.6s
-    [CV] clf__C=1, clf__kernel=linear ....................................
-    [CV] ..................... clf__C=1, clf__kernel=linear, total=  57.5s
-    [CV] clf__C=1, clf__kernel=linear ....................................
-    [CV] ..................... clf__C=1, clf__kernel=linear, total= 1.9min
-    [CV] clf__C=1, clf__kernel=linear ....................................
-    [CV] ..................... clf__C=1, clf__kernel=linear, total=  54.9s
-    [CV] clf__C=10, clf__kernel=linear ...................................
-    [CV] .................... clf__C=10, clf__kernel=linear, total= 6.8min
-    [CV] clf__C=10, clf__kernel=linear ...................................
-    [CV] .................... clf__C=10, clf__kernel=linear, total=15.2min
-    [CV] clf__C=10, clf__kernel=linear ...................................
-    [CV] .................... clf__C=10, clf__kernel=linear, total=10.2min
-    [CV] clf__C=1, clf__gamma=0.001, clf__kernel=rbf .....................
-    [CV] ...... clf__C=1, clf__gamma=0.001, clf__kernel=rbf, total=  20.7s
-    [CV] clf__C=1, clf__gamma=0.001, clf__kernel=rbf .....................
-    [CV] ...... clf__C=1, clf__gamma=0.001, clf__kernel=rbf, total=  20.7s
-    [CV] clf__C=1, clf__gamma=0.001, clf__kernel=rbf .....................
-    [CV] ...... clf__C=1, clf__gamma=0.001, clf__kernel=rbf, total=  20.8s
-    [CV] clf__C=1, clf__gamma=0.01, clf__kernel=rbf ......................
-    [CV] ....... clf__C=1, clf__gamma=0.01, clf__kernel=rbf, total=  25.1s
-    [CV] clf__C=1, clf__gamma=0.01, clf__kernel=rbf ......................
-    [CV] ....... clf__C=1, clf__gamma=0.01, clf__kernel=rbf, total=  24.9s
-    [CV] clf__C=1, clf__gamma=0.01, clf__kernel=rbf ......................
-    [CV] ....... clf__C=1, clf__gamma=0.01, clf__kernel=rbf, total=  25.2s
-    [CV] clf__C=10, clf__gamma=0.001, clf__kernel=rbf ....................
-    [CV] ..... clf__C=10, clf__gamma=0.001, clf__kernel=rbf, total=  18.5s
-    [CV] clf__C=10, clf__gamma=0.001, clf__kernel=rbf ....................
-    [CV] ..... clf__C=10, clf__gamma=0.001, clf__kernel=rbf, total=  18.4s
-    [CV] clf__C=10, clf__gamma=0.001, clf__kernel=rbf ....................
-    [CV] ..... clf__C=10, clf__gamma=0.001, clf__kernel=rbf, total=  18.7s
-    [CV] clf__C=10, clf__gamma=0.01, clf__kernel=rbf .....................
-    [CV] ...... clf__C=10, clf__gamma=0.01, clf__kernel=rbf, total=  26.2s
-    [CV] clf__C=10, clf__gamma=0.01, clf__kernel=rbf .....................
-    [CV] ...... clf__C=10, clf__gamma=0.01, clf__kernel=rbf, total=  25.7s
-    [CV] clf__C=10, clf__gamma=0.01, clf__kernel=rbf .....................
-    [CV] ...... clf__C=10, clf__gamma=0.01, clf__kernel=rbf, total=  28.6s
-
-
-    [Parallel(n_jobs=1)]: Done  21 out of  21 | elapsed: 46.0min finished
-
-
-    Best accuracy: 0.768
-    
-    Best params:
-     {'clf__C': 10, 'clf__gamma': 0.01, 'clf__kernel': 'rbf'}
-
-
-Use your grid search object along with `.cv_results` to get the full result overview
-
-
-```python
-gs_svm.cv_results_
-```
-
-
-
-
-    {'mean_fit_time': array([ 16.79013491,  71.33056235, 639.17409929,  13.70507884,
-             17.53288174,  12.02135372,  19.23653618]),
-     'mean_score_time': array([4.75776227, 4.71980898, 4.8361907 , 7.05108039, 7.56134033,
-            6.50381263, 7.59423105]),
-     'mean_test_score': array([0.73342132, 0.73428325, 0.73315197, 0.7350105 , 0.75720519,
-            0.75540053, 0.7681948 ]),
-     'mean_train_score': array([0.73748862, 0.73848524, 0.73917209, 0.74034378, 0.79117074,
-            0.76932615, 0.85658297]),
-     'param_clf__C': masked_array(data=[0.1, 1, 10, 1, 1, 10, 10],
-                  mask=[False, False, False, False, False, False, False],
-            fill_value='?',
-                 dtype=object),
-     'param_clf__gamma': masked_array(data=[--, --, --, 0.001, 0.01, 0.001, 0.01],
-                  mask=[ True,  True,  True, False, False, False, False],
-            fill_value='?',
-                 dtype=object),
-     'param_clf__kernel': masked_array(data=['linear', 'linear', 'linear', 'rbf', 'rbf', 'rbf',
-                        'rbf'],
-                  mask=[False, False, False, False, False, False, False],
-            fill_value='?',
-                 dtype=object),
-     'params': [{'clf__C': 0.1, 'clf__kernel': 'linear'},
-      {'clf__C': 1, 'clf__kernel': 'linear'},
-      {'clf__C': 10, 'clf__kernel': 'linear'},
-      {'clf__C': 1, 'clf__gamma': 0.001, 'clf__kernel': 'rbf'},
-      {'clf__C': 1, 'clf__gamma': 0.01, 'clf__kernel': 'rbf'},
-      {'clf__C': 10, 'clf__gamma': 0.001, 'clf__kernel': 'rbf'},
-      {'clf__C': 10, 'clf__gamma': 0.01, 'clf__kernel': 'rbf'}],
-     'rank_test_score': array([6, 5, 7, 4, 2, 3, 1], dtype=int32),
-     'split0_test_score': array([0.73202456, 0.73226693, 0.73162062, 0.73501373, 0.75480692,
-            0.75286799, 0.76539021]),
-     'split0_train_score': array([0.73876677, 0.74034265, 0.74082754, 0.7416761 , 0.79283174,
-            0.77060773, 0.85570551]),
-     'split1_test_score': array([0.73446465, 0.73713131, 0.73543434, 0.73818182, 0.75886869,
-            0.75959596, 0.76856566]),
-     'split1_train_score': array([0.73698032, 0.73693992, 0.73794998, 0.74005091, 0.79180639,
-            0.76865581, 0.85826835]),
-     'split2_test_score': array([0.73377516, 0.73345187, 0.7324012 , 0.73183545, 0.75794068,
-            0.75373798, 0.7706296 ]),
-     'split2_train_score': array([0.73671878, 0.73817315, 0.73873874, 0.73930433, 0.78887408,
-            0.7687149 , 0.85577506]),
-     'std_fit_time': array([1.31405109e-01, 2.81576854e+01, 2.08390507e+02, 4.69008593e-02,
-            1.35473829e-01, 9.91236517e-02, 1.12904691e+00]),
-     'std_score_time': array([0.01986652, 0.02451391, 0.14919238, 0.00729983, 0.01626282,
-            0.00767372, 0.13036932]),
-     'std_test_score': array([0.00102714, 0.00207113, 0.00164501, 0.00259076, 0.00173791,
-            0.00298774, 0.002155  ]),
-     'std_train_score': array([0.00091007, 0.00140658, 0.00121407, 0.00099017, 0.00167707,
-            0.00090653, 0.00119208])}
-
-
-
-### Random Forest pipeline with grid search
-
-
-```python
+# ⏰ This cell may take a long time to run!
 # Construct pipeline
 pipe_rf = Pipeline([('pca', PCA(n_components=27)),
             ('clf', RandomForestClassifier(random_state = 123))])
@@ -1169,6 +1023,8 @@ print('\nBest params:\n', gs_rf.best_params_)
     Best params:
      {'clf__criterion': 'entropy', 'clf__max_depth': 6, 'clf__min_samples_leaf': 0.05, 'clf__min_samples_split': 0.05, 'clf__n_estimators': 120}
 
+
+Use your grid search object along with `.cv_results` to get the full result overview
 
 
 ```python
@@ -1687,10 +1543,11 @@ gs_rf.cv_results_
 
 
 
-## Adaboost
+### Adaboost
 
 
 ```python
+# ⏰ This cell may take several minutes to run
 from sklearn.ensemble import AdaBoostClassifier
 # Construct pipeline
 pipe_ab = Pipeline([('pca', PCA(n_components=27)),
@@ -1788,6 +1645,51 @@ print('\nBest params:\n', gs_ab.best_params_)
     Best params:
      {'clf__learning_rate': 0.5, 'clf__n_estimators': 70}
 
+
+Use your grid search object along with `.cv_results` to get the full result overview
+
+
+```python
+gs_ab.cv_results_
+```
+
+### Level-up: SVM pipeline with grid search
+
+
+```python
+# ⏰ This cell may take a very long time to run!
+# Construct pipeline
+pipe_svm = Pipeline([('pca', PCA(n_components=27)),
+            ('clf', svm.SVC(random_state=123))])
+
+# Set grid search params
+param_grid_svm = [
+  {'clf__C': [0.1, 1, 10]  , 'clf__kernel': ['linear']},
+  {'clf__C': [1, 10], 'clf__gamma': [0.001, 0.01], 'clf__kernel': ['rbf']},
+ ]
+
+# Construct grid search
+gs_svm = GridSearchCV(estimator=pipe_svm,
+            param_grid=param_grid_svm,
+            scoring='accuracy',
+            cv=3, verbose=2, return_train_score = True)
+
+# Fit using grid search
+gs_svm.fit(X_train, y_train)
+
+# Best accuracy
+print('Best accuracy: %.3f' % gs_svm.best_score_)
+
+# Best params
+print('\nBest params:\n', gs_svm.best_params_)
+```
+
+Use your grid search object along with `.cv_results` to get the full result overview
+
+
+```python
+gs_svm.cv_results_
+```
 
 ## Note
 
