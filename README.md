@@ -158,51 +158,68 @@ Repeat the above, but now create three different pipelines:
 
 ```python
 # Your code here
+# ⏰ This cell may take several minutes to run
 ```
 
 ## Pipeline with grid search
 
-Construct 3 pipelines with grid search
-- one for support vector machines - make sure your grid isn't too big. You'll see it takes quite a while to fit SVMs with non-linear kernel functions!
+Construct two pipelines with grid search:
 - one for random forests - try to have around 40 different models
-- one for the adaboost algorithm. 
+- one for the adaboost algorithm 
 
-### SVM pipeline with grid search
+As extra, level-up work, construct a pipeline with grid search for support vector machines. 
+* Make sure your grid isn't too big. You'll see it takes quite a while to fit SVMs with non-linear kernel functions!
+
+### Random Forest pipeline with grid search
 
 
 ```python
-# Your code here
+# Your code here 
+# imports
 ```
 
 
 ```python
 # Your code here
+# ⏰ This cell may take a long time to run!
+
 ```
 
 Use your grid search object along with `.cv_results` to get the full result overview
 
 
 ```python
-# Your code here
+# Your code here 
 ```
 
-### Random Forest pipeline with grid search
+### Adaboost
 
 
 ```python
 # Your code here
+# ⏰ This cell may take several minutes to run
 ```
+
+Use your grid search object along with `.cv_results` to get the full result overview
+
+
+```python
+# Your code here 
+```
+
+### Level-up: SVM pipeline with grid search
 
 
 ```python
 # Your code here
+# ⏰ This cell may take a very long time to run!
 ```
 
-## Adaboost
+Use your grid search object along with `.cv_results` to get the full result overview
 
 
 ```python
-# Your code here
+# Your code here 
 ```
 
 ## Note
